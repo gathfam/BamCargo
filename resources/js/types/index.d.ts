@@ -73,20 +73,32 @@ export interface Cost {
     volumetric_weight: number;
     weight: number;
 }
+export interface CostMotor {
+    city_destination: string;
+    city_origin: string;
+    cost: number;
+    display_cost: string;
+    district_destination: string | null;
+    district_origin: string | null;
+    etd: string;
+    mtr_cc: number;
+    notes: string | null;
+    service: string;
+}
+
 
 export interface CostResult {
     costs: Cost[];
 }
-
-export interface LocationDetails {
-    id: number | string;
-    type: string;
-    name: string;
+export interface CostMotorResult {
+    costs: CostMotor[];
 }
 
+export interface CostMotorResponse {
+    success: boolean;
+    results: CostMotorResult;
+}
 export interface CostResponse {
     success: boolean;
-    origin_details: LocationDetails;
-    destination_details: LocationDetails;
     results: CostResult;
 }

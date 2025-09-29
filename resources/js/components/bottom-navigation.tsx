@@ -1,4 +1,4 @@
-'use client';
+    'use client';
 
 import * as React from 'react';
 
@@ -15,6 +15,7 @@ export function BottomNavigation() {
     const data = [
         { title: 'Cek Resi', url: '#cek-resi', icon: '' },
         { title: 'Cek Ongkir', url: '#cek-ongkir', icon: '' },
+        { title: 'Hubungi Kami', url: '#cek-ongkir', icon: '' },
     ];
     return (
         <NavigationMenu viewport={false} className='fixed flex bottom-0 p-4 bg-white shadow-2xl outline-1 outline-slate-300 min-w-full'>

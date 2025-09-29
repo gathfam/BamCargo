@@ -15,13 +15,12 @@ export default function DashboardLayout({
                 <header className="fixed z-50 flex h-16 w-full shrink-0 gap-2 bg-[#fafafa] shadow-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                     <div className="flex w-full items-center justify-between gap-2 px-4">
                         <AppSidebar />
-
                         <img
                             src="./storage/assets/images/logo-Bam-Cargo-100.png"
                             alt=""
                             width={64}
                         />
-                        <a />
+                        <a className='w-5'/>
                     </div>
                 </header>
                 <Toaster position='top-right' richColors/>

@@ -1,9 +1,10 @@
 import {
     Cost,
+    CostMotor,
+    CostMotorResponse,
     CostResponse,
     Destination,
     DestinationResponse,
-    LocationDetails,
 } from '@/types';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -58,10 +59,7 @@ export function useDestinations(searchQuery: string) {
 
 export function useCost(req: any | null) {
     const [costs, setCosts] = useState<Cost[]>([]);
-    const [origin, setOrigin] = useState<LocationDetails | null>(null);
-    const [destination, setDestination] = useState<LocationDetails | null>(
-        null,
-    );
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
@@ -79,8 +77,6 @@ export function useCost(req: any | null) {
                 );
 
                 if (!cancelled) {
-                    setOrigin(data.origin_details);
-                    setDestination(data.destination_details);
                     setCosts(data.results?.costs ?? []);
                 }
             } catch (err: any) {
@@ -106,10 +102,10 @@ export function useCost(req: any | null) {
         };
     }, [req]);
 
-    return { origin, destination, costs, loading, error } as const;
+    return { costs, loading, error } as const;
 }
 export function useCostMtr(req: any | null) {
-    const [costs, setCosts] = useState<Cost[]>([]);
+    const [costs, setCosts] = useState<CostMotor[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
@@ -121,13 +117,13 @@ export function useCostMtr(req: any | null) {
             setLoading(true);
             setError(null);
             try {
-                const { data } = await axios.post<CostResponse>(
-                    '/api/getCost',
+                const { data } = await axios.post<CostMotorResponse>(
+                    '/api/getMtrCost',
                     req,
                 );
-
                 if (!cancelled) {
-                    setCosts(data.results?.costs ?? []);
+                    // setCosts(data.results ?? []);
+                    setCosts(data.results.costs ?? []);
                 }
             } catch (err: any) {
                 if (!cancelled) {
@@ -152,5 +148,5 @@ export function useCostMtr(req: any | null) {
         };
     }, [req]);
 
-    return {costs, loading, error } as const;
+    return { costs, loading, error } as const;
 }

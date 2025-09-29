@@ -11,3 +11,4 @@ Route::inertia('/tentang-kami', 'about');
 // API
 Route::get('/api/getDestinationList', [dashboardController::class, 'getDestinationList'])->name('getDestinationList');
 Route::post('/api/getCost', [dashboardController::class, 'postOngkir'])->name('postOngkir');
+Route::post('/api/getMtrCost', [dashboardController::class, 'postOngkirMotor'])->name('postOngkirMotor');

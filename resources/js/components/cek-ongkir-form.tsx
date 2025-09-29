@@ -110,7 +110,7 @@ export function CekOngkirForm({ className, ...props }: CekOngkirFormProps) {
 
     const [req, setReq] = useState<any | null>(null);
 
-    const { origin, destination, costs, loading, error } = useCost(req);
+    const { costs, loading, error } = useCost(req);
 
     // Handle when no cost is returned
 
@@ -170,7 +170,7 @@ export function CekOngkirForm({ className, ...props }: CekOngkirFormProps) {
     isNaN(parseFloat(berat));
 
     return (
-        <div className={cn('flex w-[80%] flex-col gap-6', className)} {...props}>
+        <div className={cn('flex w-full flex-col gap-6', className)} {...props}>
             <Card>
                 <CardContent className="p-6">
                     <form onSubmit={handleSubmit}>
@@ -264,39 +264,39 @@ export function CekOngkirForm({ className, ...props }: CekOngkirFormProps) {
                             </div>
 
                             {/* Berat */}
-                            <div>
-                                <Label
-                                    htmlFor="berat"
-                                    className="mb-2 block text-sm font-medium"
-                                >
-                                    Berat
-                                </Label>
-                                <InputBase>
-                                    <InputBaseControl>
-                                        <InputBaseInput
-                                            id="berat"
-                                            type="number"
-                                            placeholder="0"
-                                            value={berat}
-                                            onChange={(e) => {
-                                                const val = e.target.value;
-                                                setBerat(val);
-                                            }}
-                                            min="0"
-                                            step="0.1"
-                                        />
-                                    </InputBaseControl>
-                                    <InputBaseAdornment className="text-sm">
-                                        Kg
-                                    </InputBaseAdornment>
-                                </InputBase>
-                                <p className="mt-1 text-xs text-gray-500">
-                                    Masukkan berat barang dalam kilogram
-                                </p>
-                            </div>
 
                             {/* Dimensi */}
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label
+                                        htmlFor="berat"
+                                        className="mb-2 block text-sm font-medium"
+                                    >
+                                        Berat
+                                    </Label>
+                                    <InputBase>
+                                        <InputBaseControl>
+                                            <InputBaseInput
+                                                id="berat"
+                                                type="number"
+                                                placeholder="0"
+                                                value={berat}
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setBerat(val);
+                                                }}
+                                                min="0"
+                                                step="0.1"
+                                            />
+                                        </InputBaseControl>
+                                        <InputBaseAdornment className="text-sm">
+                                            Kg
+                                        </InputBaseAdornment>
+                                    </InputBase>
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        Masukkan berat barang dalam kilogram
+                                    </p>
+                                </div>
                                 <div>
                                     <Label
                                         htmlFor="panjang"

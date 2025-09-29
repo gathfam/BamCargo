@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useCost, useDestinations } from '@/hooks/cek-ongkir';
+import { useCostMtr, useDestinations } from '@/hooks/cek-ongkir';
 import { cn } from '@/lib/utils';
 import { Destination } from '@/types';
 import { useEffect, useState } from 'react';
@@ -110,7 +110,7 @@ export function CekOngkirMotorForm({
 
     const [req, setReq] = useState<any | null>(null);
 
-    const { origin, destination, costs, loading, error } = useCost(req);
+    const { costs, loading, error } = useCostMtr(req);
 
     // Handle when no cost is returned
 
@@ -122,12 +122,10 @@ export function CekOngkirMotorForm({
             return;
         }
 
-
         const submitData = {
             orig_id: selectedOrigin.id,
             dest_id: selectedDestination.id,
-        
-            height: Silinder ? parseFloat(Silinder) : 0,
+            mtr_cc: Silinder ? parseFloat(Silinder) : 0,
         };
 
         // trigger the hook to fetch
@@ -137,7 +135,7 @@ export function CekOngkirMotorForm({
     useEffect(() => {
         if (costs && costs.length === 0 && isSubmitted) {
             toast.warning(
-                `Tarif tidak ditemukan untuk pengiriman dari ${selectedOrigin?.text} Ke ${selectedDestination?.text}`,
+                `Tarif pengiriman tidak ditemukan untuk pengiriman dari ${selectedOrigin?.text} Ke ${selectedDestination?.text}`,
             );
         }
     }, [costs]);
@@ -159,106 +157,106 @@ export function CekOngkirMotorForm({
         !Silinder;
 
     return (
-        <div
-            className={cn('flex w-[80%] flex-col gap-6', className)}
-            {...props}
-        >
+        <div className={cn('flex w-full flex-col gap-6', className)} {...props}>
             <Card>
                 <CardContent className="p-6">
                     <form onSubmit={handleSubmit}>
                         <div className="grid gap-5">
                             {/* Kota Asal */}
-                            <div className="flex-1">
-                                <Label
-                                    htmlFor="kota-asal"
-                                    className="mb-2 block text-sm font-medium"
-                                >
-                                    Kota/Kab. Asal
-                                </Label>
-                                <Select
-                                    id="kota-asal"
-                                    className="basic-single"
-                                    classNamePrefix="select"
-                                    isDisabled={false}
-                                    isLoading={originLoading}
-                                    isClearable={true}
-                                    isSearchable={true}
-                                    name="origin"
-                                    options={originSelectOptions}
-                                    value={
-                                        selectedOrigin
-                                            ? {
-                                                  value: selectedOrigin.id,
-                                                  label: selectedOrigin.text,
-                                                  data: selectedOrigin,
-                                              }
-                                            : null
-                                    }
-                                    onChange={handleOriginChange}
-                                    onInputChange={handleOriginInputChange}
-                                    placeholder="Ketik nama kota asal..."
-                                    noOptionsMessage={({ inputValue }) =>
-                                        inputValue
-                                            ? 'Kota tidak ditemukan'
-                                            : 'Ketik untuk mencari kota'
-                                    }
-                                    loadingMessage={() => 'Mencari kota...'}
-                                />
-                                {originError && (
-                                    <p className="mt-1 text-xs text-red-500">
-                                        {originError}
-                                    </p>
-                                )}
-                            </div>
+                            <div className="grid gap-5 sm:grid-cols-2">
+                                <div className="flex-1">
+                                    <Label
+                                        htmlFor="kota-asal"
+                                        className="mb-2 block text-sm font-medium"
+                                    >
+                                        Kota/Kab. Asal
+                                    </Label>
+                                    <Select
+                                        id="kota-asal"
+                                        className="basic-single"
+                                        classNamePrefix="select"
+                                        isDisabled={false}
+                                        isLoading={originLoading}
+                                        isClearable={true}
+                                        isSearchable={true}
+                                        name="origin"
+                                        options={originSelectOptions}
+                                        value={
+                                            selectedOrigin
+                                                ? {
+                                                      value: selectedOrigin.id,
+                                                      label: selectedOrigin.text,
+                                                      data: selectedOrigin,
+                                                  }
+                                                : null
+                                        }
+                                        onChange={handleOriginChange}
+                                        onInputChange={handleOriginInputChange}
+                                        placeholder="Ketik nama kota asal..."
+                                        noOptionsMessage={({ inputValue }) =>
+                                            inputValue
+                                                ? 'Kota tidak ditemukan'
+                                                : 'Ketik untuk mencari kota'
+                                        }
+                                        loadingMessage={() => 'Mencari kota...'}
+                                    />
+                                    {originError && (
+                                        <p className="mt-1 text-xs text-red-500">
+                                            {originError}
+                                        </p>
+                                    )}
+                                </div>
 
-                            {/* Kota Tujuan */}
-                            <div className="flex-1">
-                                <Label
-                                    htmlFor="kota-tujuan"
-                                    className="mb-2 block text-sm font-medium"
-                                >
-                                    Kota/Kab. Tujuan
-                                </Label>
-                                <Select
-                                    id="kota-tujuan"
-                                    className="basic-single"
-                                    classNamePrefix="select"
-                                    isDisabled={false}
-                                    isLoading={destinationLoading}
-                                    isClearable={true}
-                                    isSearchable={true}
-                                    name="destination"
-                                    options={destinationSelectOptions}
-                                    value={
-                                        selectedDestination
-                                            ? {
-                                                  value: selectedDestination.id,
-                                                  label: selectedDestination.text,
-                                                  data: selectedDestination,
-                                              }
-                                            : null
-                                    }
-                                    onChange={handleDestinationChange}
-                                    onInputChange={handleDestinationInputChange}
-                                    placeholder="Ketik nama kota tujuan..."
-                                    noOptionsMessage={({ inputValue }) =>
-                                        inputValue
-                                            ? 'Kota tidak ditemukan'
-                                            : 'Ketik untuk mencari kota'
-                                    }
-                                    loadingMessage={() => 'Mencari kota...'}
-                                />
-                                {destinationError && (
-                                    <p className="mt-1 text-xs text-red-500">
-                                        {destinationError}
-                                    </p>
-                                )}
+                                {/* Kota Tujuan */}
+                                <div className="flex-1">
+                                    <Label
+                                        htmlFor="kota-tujuan"
+                                        className="mb-2 block text-sm font-medium"
+                                    >
+                                        Kota/Kab. Tujuan
+                                    </Label>
+                                    <Select
+                                        id="kota-tujuan"
+                                        className="basic-single"
+                                        classNamePrefix="select"
+                                        isDisabled={false}
+                                        isLoading={destinationLoading}
+                                        isClearable={true}
+                                        isSearchable={true}
+                                        name="destination"
+                                        options={destinationSelectOptions}
+                                        value={
+                                            selectedDestination
+                                                ? {
+                                                      value: selectedDestination.id,
+                                                      label: selectedDestination.text,
+                                                      data: selectedDestination,
+                                                  }
+                                                : null
+                                        }
+                                        onChange={handleDestinationChange}
+                                        onInputChange={
+                                            handleDestinationInputChange
+                                        }
+                                        placeholder="Ketik nama kota tujuan..."
+                                        noOptionsMessage={({ inputValue }) =>
+                                            inputValue
+                                                ? 'Kota tidak ditemukan'
+                                                : 'Ketik untuk mencari kota'
+                                        }
+                                        loadingMessage={() => 'Mencari kota...'}
+                                    />
+                                    {destinationError && (
+                                        <p className="mt-1 text-xs text-red-500">
+                                            {destinationError}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-
                             {/* Berat */}
-                            <div className='mb-5'>
+                            <div className="mb-5">
                                 <Label
-                                    htmlFor="berat"
+                                    htmlFor="silinder"
                                     className="mb-2 block text-sm font-medium"
                                 >
                                     Ukuran Silinder
@@ -266,7 +264,7 @@ export function CekOngkirMotorForm({
                                 <InputBase>
                                     <InputBaseControl>
                                         <InputBaseInput
-                                            id="berat"
+                                            id="silinder"
                                             type="number"
                                             placeholder="0"
                                             value={Silinder}
@@ -282,9 +280,7 @@ export function CekOngkirMotorForm({
                                         cc
                                     </InputBaseAdornment>
                                 </InputBase>
-                          
                             </div>
-
                         </div>
 
                         {/* Button */}
@@ -299,140 +295,55 @@ export function CekOngkirMotorForm({
                                 ? 'Memuat...'
                                 : 'Cek Ongkir'}
                         </Button>
+                        <div className="w-[200%]"></div>
                     </form>
                     {/* Table display */}
                     {costs.length == 0 ? null : (
-                        <>
-                            <div className="overflow-x-auto">
-                                <h4 className="my-5 scroll-m-20 text-xl font-semibold tracking-tight">
-                                    Biaya Berdasarkan Berat
-                                </h4>
-                                <table className="w-full table-auto border-collapse">
-                                    <thead>
-                                        <tr className="border-b text-left text-sm text-gray-600">
-                                            <th className="px-2 py-3">
-                                                Layanan
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Berat Aktual
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Berat Volumetrik
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Berat Min.
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Berat Dipakai
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Biaya Kirim
-                                            </th>
-                                            <th className="px-2 py-3">SLA</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {costs.map((r, idx) =>
-                                            r.service ==
-                                            'Less Container Load' ? null : (
-                                                <tr
-                                                    key={r.service}
-                                                    className={
-                                                        idx % 2 === 0
-                                                            ? 'bg-white'
-                                                            : 'bg-gray-50'
-                                                    }
-                                                >
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.service}
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.weight}Kg
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.volumetric_weight}Kg
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.min_weight}Kg
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.charged_weight}Kg
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm font-medium">
-                                                        {r.display_cost}
-                                                    </td>
-                                                    <td className="border-t px-2 py-4 text-sm">
-                                                        {r.etd} Hari
-                                                    </td>
-                                                </tr>
-                                            ),
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="overflow-x-auto">
-                                <h4 className="my-5 scroll-m-20 text-xl font-semibold tracking-tight">
-                                    Biaya Berdasarkan Volume
-                                </h4>
-                                <table className="w-full table-auto border-collapse">
-                                    <thead>
-                                        <tr className="border-b text-left text-sm text-gray-600">
-                                            <th className="px-2 py-3">
-                                                Layanan
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Volume Aktual
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Volume Min.
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Volume Dipakai
-                                            </th>
-                                            <th className="px-2 py-3">
-                                                Biaya Kirim
-                                            </th>
-                                            <th className="px-2 py-3">Etd.</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {costs.map((r, idx) =>
-                                            r.service !=
-                                            'Less Container Load' ? null : (
-                                                <tr
-                                                    key={r.service}
-                                                    className={
-                                                        idx % 2 === 0
-                                                            ? 'bg-white'
-                                                            : 'bg-gray-50'
-                                                    }
-                                                >
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.service}
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.volume}m3
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.min_volume}m3
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm">
-                                                        {r.charged_volume}
-                                                        Kg
-                                                    </td>
-                                                    <td className="border-t border-r px-2 py-4 text-sm font-medium">
-                                                        {r.display_cost}
-                                                    </td>
-                                                    <td className="border-t px-2 py-4 text-sm">
-                                                        {r.etd} Hari
-                                                    </td>
-                                                </tr>
-                                            ),
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </>
+                        <div className="overflow-x-auto">
+                            <table className="w-full table-auto border-collapse">
+                                <thead>
+                                    <tr className="border-b text-left text-sm text-gray-600">
+                                        <th className="px-2 py-3">Layanan</th>
+                                        <th className="px-2 py-3">
+                                            Ukuran Silinder{' '}
+                                        </th>
+                                        <th className="px-2 py-3">
+                                            Biaya Kirim
+                                        </th>
+                                        <th className="px-2 py-3">SLA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {costs.map((r, idx) =>
+                                        r.service ==
+                                        'Less Container Load' ? null : (
+                                            <tr
+                                                key={r.service}
+                                                className={
+                                                    idx % 2 === 0
+                                                        ? 'bg-white'
+                                                        : 'bg-gray-50'
+                                                }
+                                            >
+                                                <td className="border-t border-r px-2 py-4 text-sm">
+                                                    {r.service}
+                                                </td>
+                                                <td className="border-t border-r px-2 py-4 text-sm">
+                                                    {r.mtr_cc} cc
+                                                </td>
+
+                                                <td className="border-t border-r px-2 py-4 text-sm font-medium">
+                                                    {r.display_cost}
+                                                </td>
+                                                <td className="border-t px-2 py-4 text-sm">
+                                                    {r.etd} Hari
+                                                </td>
+                                            </tr>
+                                        ),
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     )}
                 </CardContent>
             </Card>

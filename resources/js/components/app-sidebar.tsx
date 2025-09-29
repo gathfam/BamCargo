@@ -118,39 +118,25 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     // let location = useLocation();
     return (
-        // <Sidebar variant="inset" collapsible="offcanvas" {...props}>
-        //     <SidebarHeader className="flex items-center justify-center">
-        //         {/* <TeamSwitcher teams={data.teams} /> */}
-
-        //         <img
-        //             src="https://bamcargo.co.id/wp-content/uploads/2023/02/logo-Bam-Cargo-100.png"
-        //             alt="Logo Bamcargo"
-        //             width={100}
-        //         />
-        //     </SidebarHeader>
-        //     <Separator />
-        //     <SidebarContent className="space-y-2 px-2">
-        //
-        //     </SidebarContent>
-        //     {/* <SidebarFooter>{location}</SidebarFooter> */}
-        //     <SidebarRail />
-        // </Sidebar>
         <Sheet>
             <SheetTrigger>
-                <Button variant={'secondary'} size={'icon'}>
-                    <Menu size={32} />
+                <Button
+                    variant={'secondary'}
+                    size={'icon'}
+                    className="h-7 w-7 sm:h-10 sm:w-10"
+                >
+                    <Menu size={12} />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className='overflow-auto'>
+            <SheetContent side="left" className="overflow-auto">
                 <SheetHeader className="relative items-center justify-center">
-                    {/* <SheetTitle>Are you absolutely sure?</SheetTitle> */}
                     <img
                         src="./storage/assets/images/logo-Bam-Cargo-100.png"
                         alt=""
                         width={'50%'}
                     />
                 </SheetHeader>
-                <div className="px-5 mb-10">
+                <div className="mb-10 px-5">
                     <div>
                         <SidebarGroupLabel>Menu</SidebarGroupLabel>
 

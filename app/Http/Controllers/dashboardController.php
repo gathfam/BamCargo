@@ -129,7 +129,7 @@ class dashboardController extends Controller
         try {
             $response = Http::withHeaders($headers)
                 ->timeout(30)
-                ->post(env('BASE_URL') . 'api/v1/get-mtr-costs', $request);
+                ->post(env('BASE_URL') . 'api/v1/get_mtr_costs', $request);
 
             if ($response->successful()) {
                 $data = $response->json();
