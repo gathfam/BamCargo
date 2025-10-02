@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useCostMtr, useDestinations } from '@/hooks/cek-ongkir';
+import { useCostMtr, useDestinations } from '@/hooks/api-hit';
 import { cn } from '@/lib/utils';
 import { Destination } from '@/types';
 import { useEffect, useState } from 'react';

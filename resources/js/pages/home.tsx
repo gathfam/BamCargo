@@ -3,6 +3,7 @@ import { BottomNavigation } from '@/components/bottom-navigation';
 import { CekOngkirForm } from '@/components/cek-ongkir-form';
 
 import { CekOngkirMotorForm } from '@/components/cek-ongkir-mtr-form';
+import { CekResi } from '@/components/cek-resi-form';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FloatingWhatsAppIcon } from './../components/floating-wa-button';
@@ -18,6 +19,12 @@ export default function Home() {
                 <CarouselBanner />
                 <Separator />
                 <div className="flex w-full flex-col items-center justify-center space-y-5">
+                    <div className="mt-5 w-[350px] sm:w-[600px]">
+                        <h1 className="mb-5 scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
+                            Cek Resi
+                        </h1>
+                        <CekResi />
+                    </div>
                     <Tabs defaultValue="ongkir-kargo" className="w-fit">
                         <h1 className="mb-5 scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
                             Cek Ongkir Cargo

@@ -72,16 +72,11 @@ class dashboardController extends Controller
     }
     public function postOngkir(Request $request)
     {
-        $searchQuery = $request->get('q', '');
-
-        Log::info("Fetching destinations for query: '{$searchQuery}'");
 
         $headers = [
             'Authorization' => 'Bearer ' . env('TOKEN'),
             'Accept' => 'application/json'
         ];
-
-        $queries = ['query' => $searchQuery];
 
         try {
             $response = Http::withHeaders($headers)
@@ -115,21 +110,54 @@ class dashboardController extends Controller
     }
     public function postOngkirMotor(Request $request)
     {
-        $searchQuery = $request->get('q', '');
-
-        Log::info("Fetching destinations for query: '{$searchQuery}'");
 
         $headers = [
             'Authorization' => 'Bearer ' . env('TOKEN'),
             'Accept' => 'application/json'
         ];
 
-        $queries = ['query' => $searchQuery];
-
         try {
             $response = Http::withHeaders($headers)
                 ->timeout(30)
                 ->post(env('BASE_URL') . 'api/v1/get_mtr_costs', $request);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                return response()->json([
+                    'success' => true,
+                    'results' => $data,
+                ]);
+
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'results' => [],
+                    'error' => 'External API error'
+                ], 400);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Exception: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'results' => [],
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function getResiDetail($noresi)
+    {
+        // dd($request);
+        $headers = [
+            'Authorization' => 'Bearer ' . env('TOKEN'),
+            'Accept' => 'application/json'
+        ];
+
+        try {
+            // echo($request);
+            $response = Http::withHeaders($headers)
+                ->timeout(30)
+                ->get(env('BASE_URL') . 'api/v1/receipts/' . $noresi);
 
             if ($response->successful()) {
                 $data = $response->json();

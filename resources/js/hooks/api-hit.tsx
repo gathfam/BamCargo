@@ -5,6 +5,8 @@ import {
     CostResponse,
     Destination,
     DestinationResponse,
+    Receipt,
+    ReceiptResponse,
 } from '@/types';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -149,4 +151,50 @@ export function useCostMtr(req: any | null) {
     }, [req]);
 
     return { costs, loading, error } as const;
+}
+
+export function useResi(req: any | null) {
+    const [data, setData] = useState<Receipt>();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        if (!req) return;
+
+        let cancelled = false;
+
+        const fetchCost = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const { data } = await axios.get<ReceiptResponse>(
+                    `/api/getResi/${req.no_receipt}`,
+                );
+
+                if (!cancelled) {
+                    setData(data.results.data ?? []);
+                }
+            } catch (err: any) {
+                if (!cancelled) {
+                    if (axios.isAxiosError(err)) {
+                        setError(
+                            err.response?.data?.error || 'Error fetching costs',
+                        );
+                    } else {
+                        setError('Unexpected error occurred');
+                    }
+                    setData(data);
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+
+        const timeoutId = setTimeout(fetchCost, 500);
+        return () => {
+            cancelled = true;
+            clearTimeout(timeoutId);
+        };
+    }, [req]);
+
+    return { data, loading, error } as const;
 }
