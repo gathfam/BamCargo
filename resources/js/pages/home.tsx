@@ -19,7 +19,7 @@ export default function Home() {
                 <CarouselBanner />
                 <Separator />
                 <div className="flex w-full flex-col items-center justify-center space-y-5">
-                    <div className="mt-5 w-[350px] sm:w-[600px]">
+                    <div className="mt-5 w-[350px] sm:w-[600px]" id='cek-resi'>
                         <h1 className="mb-5 scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
                             Cek Resi
                         </h1>

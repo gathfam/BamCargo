@@ -11,7 +11,7 @@ export function FloatingWhatsAppIcon() {
             <Button
                 variant="secondary"
                 size={'icon'}
-                className="fixed right-5 bottom-25 size-16 rounded-full bg-[#25d366] shadow-2xl hover:bg-[#3ddb77]"
+                className="fixed right-3 bottom-20 size-16 rounded-full bg-[#25d366] shadow-2xl hover:bg-[#3ddb77]"
             >
                 <FaWhatsapp className="size-10" color="#fff" />
             </Button>
