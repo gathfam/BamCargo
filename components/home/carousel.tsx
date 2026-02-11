@@ -36,8 +36,9 @@ export function BannerCarousel() {
         {Array.from({ length: 5 }).map((_, index) => (
           <CarouselItem key={index}>
             <Image
-              width="1200"
-              height="100"
+              sizes="100vw"
+              fill
+              priority={index === 0}
               alt={`banner_${index + 1}`}
               src={`/banner/banner_${index + 1}.webp`}
               className="rounded-xl items-center "
