@@ -21,6 +21,13 @@ import {
 import { memo } from "react";
 
 export const ReceiptDetailCard = memo(({ data }: { data: ReceiptDetail }) => {
+  if (data.status === "Invoice Ready") {
+    return (
+      <p className="text-red-500 bg-red-50 p-4 rounded-lg w-full text-center border border-red-200">
+        Detail resi tidak ditemukan.
+      </p>
+    );
+  }
   return (
     <div className="w-full max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500">
       <Card
@@ -34,6 +41,7 @@ export const ReceiptDetailCard = memo(({ data }: { data: ReceiptDetail }) => {
                 {data.number}
               </CardTitle>
             </div>
+
             <div
               className={`px-4 py-1 rounded-full text-sm font-bold uppercase ${
                 data.is_delivered
@@ -117,51 +125,49 @@ export const ReceiptDetailCard = memo(({ data }: { data: ReceiptDetail }) => {
         </CardHeader>
         <CardContent>
           <div className="relative space-y-0">
-            {Object.values(data.progress || {}).map((step, index) => (
-              <div key={index} className="flex gap-4 group">
-                {/* Garis Timeline */}
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`z-10 flex items-center justify-center w-8 h-8 rounded-full border-2 bg-background ${
-                      index === 0 ? "border-blue-500" : "border-muted"
-                    }`}
-                  >
-                    {index === 0 ? (
-                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                    ) : (
-                      <div className="w-2 h-2 rounded-full bg-muted" />
+            {Object.values(data.progress || {})
+              .slice()
+              .reverse()
+              .map((step, index) => (
+                <div key={index} className="flex gap-4 group">
+                  {/* Garis Timeline */}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`z-10 flex items-center justify-center w-8 h-8 rounded-full border-2 bg-background ${
+                        index === 0 ? "border-blue-500" : "border-muted"
+                      }`}
+                    >
+                      {index === 0 ? (
+                        <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                      ) : (
+                        <div className="w-2 h-2 rounded-full bg-muted" />
+                      )}
+                    </div>
+                    {index !== data.progress.length - 1 && (
+                      <div className="w-0.5 h-full bg-muted group-hover:bg-blue-200 transition-colors" />
                     )}
                   </div>
-                  {index !== data.progress.length - 1 && (
-                    <div className="w-0.5 h-full bg-muted group-hover:bg-blue-200 transition-colors" />
-                  )}
-                </div>
 
-                <div className="pb-8 flex-1">
-                  <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-1">
-                    <p
-                      className={`font-bold ${index === 0 ? "text-blue-600" : "text-foreground"}`}
-                    >
-                      {step.status}
+                  <div className="pb-8 flex-1">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-1">
+                      <p
+                        className={`font-bold ${index === 0 ? "text-blue-600" : "text-foreground"}`}
+                      >
+                        {step.status}
+                      </p>
+                      <time className="text-xs text-muted-foreground whitespace-nowrap">
+                        {step.time}
+                      </time>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Posisi:{" "}
+                      <span className="text-foreground font-medium">
+                        {step.stop}
+                      </span>
                     </p>
-                    <time className="text-xs text-muted-foreground whitespace-nowrap">
-                      {step.time}
-                    </time>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Posisi:{" "}
-                    <span className="text-foreground font-medium">
-                      {step.stop}
-                    </span>
-                  </p>
-                  {step.handler && (
-                    <p className="text-xs text-muted-foreground mt-1 italic">
-                      Handler: {step.handler}
-                    </p>
-                  )}
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </CardContent>
       </Card>

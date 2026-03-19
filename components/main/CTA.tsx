@@ -29,7 +29,7 @@ export default function CorporateCTA() {
             asChild
             className="w-full whitespace-nowrap bg-slate-900 px-5 py-2.5 h-12 font-bold uppercase text-white transition-all hover:opacity-90 dark:bg-white dark:text-slate-900 md:w-auto"
           >
-            <Link href={"#"}>Hubungi Tim Sales</Link>
+            <Link href={"/hubungi-kami"}>Hubungi Tim Sales</Link>
           </Button>
         </div>
       </CardContent>

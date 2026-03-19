@@ -1,15 +1,14 @@
-import connectToDatabase from "@/config/db";
+import pool from "@/config/db";
 import { NextResponse } from "next/server";
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 export async function POST(req: Request) {
-  let connection;
   let hashedPassword;
   try {
     const formData = await req.formData();
-    const username = formData.get("username");
-    const password = formData.get("password");
-    const full_name = formData.get("full_name");
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+    const full_name = formData.get("full_name") as string;
 
     if (!username || !password || !full_name) {
       return NextResponse.json(
@@ -17,10 +16,8 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    
-    connection = await connectToDatabase();
 
-    const [existingUser]: any = await connection.execute(
+    const [existingUser]: any = await pool.query(
       "SELECT username FROM users where username = ?;",
       [username],
     );
@@ -35,7 +32,7 @@ export async function POST(req: Request) {
     const query =
       "INSERT INTO users (username, password, full_name) VALUES (?,?,?);";
 
-    const [result]: any = await connection.execute(query, [
+    const [result]: any = await pool.execute(query, [
       username,
       hashedPassword,
       full_name,
@@ -49,7 +46,5 @@ export async function POST(req: Request) {
       { message: `Gagal mendaftarkan user`, error: e },
       { status: 500 },
     );
-  } finally {
-    if (connection) await connection.end();
   }
 }

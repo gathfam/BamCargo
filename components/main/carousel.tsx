@@ -38,11 +38,11 @@ export function BannerCarousel() {
       className="w-full "
     >
       <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
+        {Array.from({ length: 6 }).map((_, index) => (
           <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/1">
             <Image
-              width={1000}
-              height={400}
+              width={900}
+              height={300}
               // priority={index === 0}
               alt={`banner_${index + 1}`}
               src={`/banner/banner_${index + 1}.webp`}

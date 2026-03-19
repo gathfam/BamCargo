@@ -231,50 +231,60 @@ const ShippingResults = memo(
           </div>
         </div>
 
-        <div className="grid gap-4">
-          {data.costs.length === 0 ? (
-            <div className="text-center p-8 text-muted-foreground border rounded-md border-dashed">
-              Tidak ada layanan tersedia untuk rute ini.
-            </div>
-          ) : (
-            data.costs.map((cost: any, idx: number) => (
-              <Card
-                key={`${cost.service}-${idx}`}
-                className="overflow-hidden border-l-4 border-l-primary"
-              >
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div className="space-y-1">
+        <div className="overflow-x-auto border rounded-lg w-full">
+          <table className="w-full text-sm text-left whitespace-nowrap">
+            <thead className="bg-muted/50 text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3 font-medium">Layanan</th>
+                <th className="px-4 py-3 font-medium">Estimasi</th>
+                <th className="px-4 py-3 font-medium">Ketentuan</th>
+                <th className="px-4 py-3 font-medium text-right">
+                  Total Biaya
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {data.costs.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-center p-8 text-muted-foreground"
+                  >
+                    Tidak ada layanan tersedia untuk rute ini.
+                  </td>
+                </tr>
+              ) : (
+                data.costs.map((cost: any, idx: number) => (
+                  <tr
+                    key={`${cost.service}-${idx}`}
+                    className="hover:bg-accent/50 transition-colors"
+                  >
+                    <td className="px-4 py-3 font-semibold text-primary">
                       <div className="flex items-center gap-2">
-                        <Truck className="h-5 w-5 text-primary" />
-                        <h3 className="font-bold text-xl">{cost.service}</h3>
+                        <Truck className="h-4 w-4" />
+                        {cost.service}
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" /> Est. {cost.etd} Hari
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Package className="h-3 w-3" /> Min. {cost.min_weight}{" "}
-                          Kg
-                        </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="h-3 w-3 text-muted-foreground" />
+                        {cost.etd} Hari
                       </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-1 w-full md:w-auto">
-                      <div className="text-2xl font-bold text-primary">
-                        {cost.display_cost}
-                      </div>
-                      <div className="text-xs text-muted-foreground text-right">
-                        Rate: {cost.display_base_rate} / kg
-                        <br />
-                        Charged: {cost.charged_weight} kg
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
-        </div>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">
+                      <div>Min: {cost.min_weight} kg</div>
+                      <div>Rate: {cost.display_base_rate}/kg</div>
+                      <div>Charged: {cost.charged_weight} kg</div>
+                    </td>
+                    <td className="px-4 py-3 text-right font-bold text-base text-primary">
+                      {cost.display_cost}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>    
       </div>
     );
   },

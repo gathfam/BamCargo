@@ -124,7 +124,6 @@
   }
 }
 
-/* Matikan animasi default (fade) dan blending mode */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -132,22 +131,30 @@
   display: block;
 }
 
-/* Pastikan layer BARU (yang akan muncul dengan lingkaran) ada di PALING ATAS */
 ::view-transition-new(root) {
   z-index: 9999;
-  /* Opsional: Mencegah scrollbar ganda saat transisi */
+
   overflow: clip;
 }
 
-/* Layer LAMA diam di bawah, menunggu tertutup */
+
 ::view-transition-old(root) {
   z-index: 1;
 }
 
-/* Mode Gelap: Ubah urutan jika diperlukan (biasanya tidak perlu jika logikanya selalu "expand to new") */
 .dark::view-transition-old(root) {
   z-index: 1;
 }
 .dark::view-transition-new(root) {
   z-index: 9999;
+}
+@layer base {
+  .prose p {
+    @apply mb-6 leading-relaxed;
+  }
+
+  .prose h2,
+  .prose h3 {
+    @apply mt-10 mb-4;
+  }
 }

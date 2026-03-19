@@ -86,7 +86,7 @@ export function ReceiptCard() {
       </Card>
       {error && (
         <p className="text-red-500 bg-red-50 p-4 rounded-lg w-full text-center border border-red-200">
-          {(error as Error).message}
+          Detail resi tidak ditemukan.
         </p>
       )}
       {isLoading && <ReceiptSkeletonCard />}

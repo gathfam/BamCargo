@@ -1,19 +1,17 @@
-import connectToDatabase from "@/config/db";
+import pool from "@/config/db";
 import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
 import { cookies } from "next/headers";
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 const SECRET_KEY = new TextEncoder().encode(
   process.env.JWT_SECRET || "KODERAHASIBAMCARGOJWT",
 );
 export async function POST(req: Request) {
-  let connection;
   try {
-    connection = await connectToDatabase();
     const formData = await req.formData();
-    const username = await formData.get("username");
-    const password = await formData.get("password");
+    const username = (await formData.get("username")) as string;
+    const password = (await formData.get("password")) as string;
 
     if (!username || !password) {
       return NextResponse.json(
@@ -22,7 +20,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const [users]: any = await connection.execute(
+    const [users]: any = await pool.execute(
       "SELECT * FROM users WHERE username = ? LIMIT 1;",
       [username],
     );
@@ -76,7 +74,5 @@ export async function POST(req: Request) {
       { error: "Gagal memproses login" },
       { status: 500 },
     );
-  } finally {
-    if (connection) await connection.end();
   }
 }

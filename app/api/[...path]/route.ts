@@ -3,8 +3,10 @@ import { NextResponse } from "next/server";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BAM_BASE_URL;
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "";
 
-// Helper untuk construct URL
-async function getTargetUrl(request: Request, params: Promise<{ path: string[] }>) {
+async function getTargetUrl(
+  request: Request,
+  params: Promise<{ path: string[] }>,
+) {
   const parameter = await params;
   const path = parameter.path.join("/");
   const { searchParams } = new URL(request.url);
@@ -28,6 +30,7 @@ export async function GET(
     });
 
     const data = await res.json();
+
     return NextResponse.json(data, { status: res.status });
   } catch (error) {
     return NextResponse.json(
@@ -44,7 +47,6 @@ export async function POST(
   const targetUrl = await getTargetUrl(request, params);
 
   try {
-    // Baca body dari request client
     const body = await request.json();
 
     const res = await fetch(targetUrl, {

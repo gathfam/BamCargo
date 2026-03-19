@@ -4,6 +4,18 @@ export interface ApiResponse<T> {
   status: number;
 }
 
+export interface Article {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content?: string;
+  image_url: string;
+  created_at: string;
+  author_id: number;
+  status: string;
+}
+
 export interface ReceiptDetail {
   number: string;
   reference_no: string;

@@ -1,7 +1,7 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import connectToDatabase from "@/config/db";
-const bcrypt =  require("bcrypt");
+import pool from "@/config/db";
+import bcrypt from "bcrypt";
 
 export const authOptions: AuthOptions = {
   pages: {
@@ -23,11 +23,8 @@ export const authOptions: AuthOptions = {
           throw new Error("Username dan password wajib diisi");
         }
 
-        let connection;
         try {
-          connection = await connectToDatabase();
-
-          const [users]: any = await connection.execute(
+          const [users]: any = await pool.execute(
             "SELECT * FROM users WHERE username = ? LIMIT 1",
             [credentials.username],
           );
@@ -52,8 +49,6 @@ export const authOptions: AuthOptions = {
           };
         } catch (error: any) {
           throw new Error(error.message || "Gagal memproses login");
-        } finally {
-          if (connection) await connection.end();
         }
       },
     }),

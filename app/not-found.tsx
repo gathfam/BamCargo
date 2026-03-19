@@ -5,6 +5,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
+import "./globals.css";
 
 export default function NotFound() {
   return (

@@ -7,7 +7,7 @@ import CorporateCTA from "../../components/main/CTA";
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
-      <main className="w-full max-w-7xl mx-auto py-6 px-6 space-y-8">
+      <main className="w-full max-w-7xl mx-auto py-12 px-6 space-y-8">
         <div className="min-h-50 md:min-h-100 w-full">
           <BannerCarousel />
         </div>

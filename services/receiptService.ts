@@ -12,3 +12,4 @@ export const ReceiptService = {
     return res.json()
   }
 }
+

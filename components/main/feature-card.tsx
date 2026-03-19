@@ -42,7 +42,7 @@ export default function FeatureCard() {
             asChild
             className="border border-white/30 bg-white/20 px-5 py-2.5 text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/30 hover:text-white! h-12"
           >
-            <Link href={"#"}>Lihat Peta Jangkauan</Link>
+            <Link href={"/hubungi-kami"}>Lihat Peta Jangkauan</Link>
           </Button>
         </div>
         <Globe
