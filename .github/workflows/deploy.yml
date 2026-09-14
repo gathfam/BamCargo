@@ -144,9 +144,10 @@ jobs:
             echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
 
-            # Symlink storage
+            # Symlink storage ke public/uploads
             rm -rf public/storage
-            ln -s /home/bamcar7304/bamcargo_storage public/storage
+            rm -rf public/uploads
+            ln -s /home/bamcar7304/bamcargo_storage public/uploads
 
             # Trigger restart
             mkdir -p tmp
