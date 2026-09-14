@@ -1,0 +1,59 @@
+import { clsx, type ClassValue } from "clsx";
+
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function autoScrollOnFocus(
+  e: React.FocusEvent<HTMLElement> | HTMLElement,
+  delay: number = 300,
+) {
+  const target = "target" in e ? (e.target as HTMLElement) : e;
+
+  if (!target) return;
+
+  setTimeout(() => {
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  }, delay);
+}
+
+export function getImageUrl(path?: string | null): string {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+
+  const baseUrl = process.env.NEXT_PUBLIC_WEB_URL?.replace(/\/$/, "");
+
+  if (!baseUrl && process.env.NODE_ENV === "development") {
+    return path.startsWith("/") ? path : `/${path}`;
+  }
+  const finalBase = baseUrl || "https://bamcargo.co.id";
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  return `${finalBase}${normalizedPath}`
+}
+
+export function parseTags(raw: unknown): string[] | null {
+  if (raw == null) return null
+  if (Array.isArray(raw)) {
+    const arr = raw.filter((t): t is string => typeof t === "string")
+    return arr.length > 0 ? arr : null
+  }
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw)
+      if (!Array.isArray(parsed)) return null
+      const arr = parsed.filter((t): t is string => typeof t === "string")
+      return arr.length > 0 ? arr : null
+    } catch {
+      return null
+    }
+  }
+  return null
+}
+

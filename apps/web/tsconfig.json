@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./*"],
+      "@bamcargo/core": ["../../packages/core"],
+      "@bamcargo/core/*": ["../../packages/core/*"],
+      "@bamcargo/ui": ["../../packages/ui"],
+      "@bamcargo/ui/*": ["../../packages/ui/*"],
+    },
+  },
+  "include": [
+    "next-env.d.ts",
+    "next-auth.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "lib/article-schema.ts",
+  ],
+  "exclude": ["node_modules"],
+}

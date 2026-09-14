@@ -1,0 +1,26 @@
+{
+  "name": "@bamcargo/core",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+      ".": "./index.ts",
+      "./lib/*": "./lib/*.ts",
+      "./services/*": "./services/*.ts",
+      "./types/*": "./types/*.ts",
+      "./config/*": "./config/*.ts"
+    },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "mysql2": "^3.17.4",
+    "next-auth": "^4.24.13",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6"
+  },
+  "peerDependencies": {
+    "next": "*",
+    "react": "*"
+  }
+}
