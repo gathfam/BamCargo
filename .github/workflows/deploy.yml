@@ -79,23 +79,27 @@ jobs:
             mkdir -p deploy-package/public
           fi
 
-      # 5. Upload paket ke server via rsync over SSH
-      - name: Deploy build to server via rsync
-        uses: burnett01/rsync-deployments@7.0.2
-        with:
-          switches: -avzr --delete
-          # --delete akan hapus file di tujuan yang gak ada di source
-          path: deploy-package/
-          remote_path: /home/bamcar7304/dev.bamcargo.co.id/apps/web/
-          remote_host: bamcargo.co.id
-          remote_port: 45022
-          remote_user: bamcar7304
-          remote_key: ${{ secrets.VPS_SSH_KEY }}
+      # 5. Compress deploy package
+      - name: Create deployment archive
+        run: |
+          cd deploy-package
+          tar -czf ../deploy.tar.gz .
+          cd ..
+          ls -lh deploy.tar.gz
 
-      # 6. Symlink assets custom (kalau ada) & restart app via Passenger.
-      #    TIDAK perlu pnpm install lagi di server -- node_modules udah
-      #    ikut kebawa lengkap di dalam standalone package.
-      - name: Post-deploy commands via SSH
+      # 6. Upload via SCP
+      - name: Upload build to server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: bamcargo.co.id
+          port: 45022
+          username: bamcar7304
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "deploy.tar.gz"
+          target: "/home/bamcar7304/"
+
+      # 7. Extract & cleanup on server
+      - name: Extract and deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: bamcargo.co.id
@@ -103,7 +107,22 @@ jobs:
           username: bamcar7304
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /home/bamcar7304/dev.bamcargo.co.id/apps/web
+            cd /home/bamcar7304
+
+            # Backup existing deployment (optional)
+            if [ -d dev.bamcargo.co.id/apps/web_backup ]; then
+              rm -rf dev.bamcargo.co.id/apps/web_backup
+            fi
+            if [ -d dev.bamcargo.co.id/apps/web ]; then
+              mv dev.bamcargo.co.id/apps/web dev.bamcargo.co.id/apps/web_backup
+            fi
+
+            # Extract new build
+            mkdir -p dev.bamcargo.co.id/apps/web
+            tar -xzf deploy.tar.gz -C dev.bamcargo.co.id/apps/web/
+            rm deploy.tar.gz
+
+            cd dev.bamcargo.co.id/apps/web
 
             # Kalau kamu punya storage assets terpisah yang di-symlink manual,
             # sesuaikan baris ini (opsional, hapus kalau gak perlu)
