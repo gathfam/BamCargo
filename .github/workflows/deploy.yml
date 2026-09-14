@@ -79,7 +79,15 @@ jobs:
             mkdir -p deploy-package/public
           fi
 
-      # 5. Compress deploy package
+      # 5. Copy critical files from repo to deploy package (public assets ignored by git)
+      - name: Copy critical public assets
+        run: |
+          # Copy logo dan favicon yang penting
+          mkdir -p deploy-package/public
+          cp apps/web/public/logo-Bam-Cargo-100.png deploy-package/public/ 2>/dev/null || echo "Logo not found"
+          cp apps/web/public/favicon.ico deploy-package/public/ 2>/dev/null || echo "Favicon not found"
+
+      # 6. Compress deploy package
       - name: Create deployment archive
         run: |
           cd deploy-package
@@ -125,24 +133,21 @@ jobs:
             cd dev.bamcargo.co.id/apps/web
 
             # Create .env file with production secrets
-            cat > .env << 'EOF'
-            NEXT_PUBLIC_APP_URL=https://dev.bamcargo.co.id
-            BAM_BACKEND_URL=https://online.bamcargo.co.id/api/v1
-            BAM_API_KEY=${{ secrets.BAM_API_KEY }}
-            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL=https://dev.bamcargo.co.id
-            DB_HOST=127.0.0.1
-            DB_PORT=3306
-            DB_USER=${{ secrets.DB_USER }}
-            DB_PASS=${{ secrets.DB_PASS }}
-            DB_NAME=${{ secrets.DB_NAME }}
-            EOF
+            echo "NEXT_PUBLIC_APP_URL=https://bamcargo.co.id" > .env
+            echo "BAM_BACKEND_URL=https://online.bamcargo.co.id/api/v1" >> .env
+            echo "BAM_API_KEY=${{ secrets.BAM_API_KEY }}" >> .env
+            echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+            echo "NEXTAUTH_URL=https://bamcargo.co.id" >> .env
+            echo "DB_HOST=127.0.0.1" >> .env
+            echo "DB_PORT=3306" >> .env
+            echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+            echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
 
-            # Kalau kamu punya storage assets terpisah yang di-symlink manual,
-            # sesuaikan baris ini (opsional, hapus kalau gak perlu)
+            # Symlink storage
             rm -rf public/storage
             ln -s /home/bamcar7304/bamcargo_storage public/storage
 
-            # Trigger restart lewat Passenger (cPanel Node.js App)
+            # Trigger restart
             mkdir -p tmp
             touch tmp/restart.txt
