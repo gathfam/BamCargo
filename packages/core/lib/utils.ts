@@ -27,15 +27,8 @@ export function getImageUrl(path?: string | null): string {
   if (!path) return "";
   if (path.startsWith("http")) return path;
 
-  const baseUrl = process.env.NEXT_PUBLIC_WEB_URL?.replace(/\/$/, "");
-
-  if (!baseUrl && process.env.NODE_ENV === "development") {
-    return path.startsWith("/") ? path : `/${path}`;
-  }
-  const finalBase = baseUrl || "https://bamcargo.co.id";
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-
-  return `${finalBase}${normalizedPath}`
+  // Return relative path untuk Next.js Image Optimization
+  return path.startsWith("/") ? path : `/${path}`;
 }
 
 export function parseTags(raw: unknown): string[] | null {
