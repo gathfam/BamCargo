@@ -25,7 +25,15 @@ export function autoScrollOnFocus(
 
 export function getImageUrl(path?: string | null): string {
   if (!path) return "";
-  if (path.startsWith("http")) return path;
+
+  // Convert absolute bamcargo URLs to relative untuk Image Optimization
+  if (path.startsWith("http")) {
+    const uploadIndex = path.indexOf("/uploads/");
+    if (uploadIndex !== -1) {
+      return path.slice(uploadIndex); // /uploads/banners/...
+    }
+    return path; // External URL (bukan bamcargo), return as-is
+  }
 
   // Return relative path untuk Next.js Image Optimization
   return path.startsWith("/") ? path : `/${path}`;
