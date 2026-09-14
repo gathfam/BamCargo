@@ -35,7 +35,7 @@ jobs:
       - name: Build project
         run: pnpm build
         env:
-          NEXT_PUBLIC_APP_URL: https://bamcargo.co.id
+          NEXT_PUBLIC_APP_URL: https://dev.bamcargo.co.id
           BAM_BACKEND_URL: https://online.bamcargo.co.id/api/v1
 
       # 4. Susun paket standalone dalam bentuk FLAT (server.js langsung di root),
