@@ -49,19 +49,13 @@ jobs:
           rm -rf deploy-package
           mkdir -p deploy-package
 
-          # node_modules & package.json hasil hoist di level atas standalone
-          cp -r apps/web/.next/standalone/node_modules deploy-package/node_modules
-          cp apps/web/.next/standalone/package.json deploy-package/package.json
-
-          # isi apps/web (server.js, .next server chunks, dll) diangkat ke root
+          # isi apps/web (server.js, .next server chunks, package.json) diangkat ke root
           cp -r apps/web/.next/standalone/apps/web/. deploy-package/
 
-          # kalau ada node_modules lokal khusus apps/web, gabung ke node_modules utama
-          if [ -d apps/web/.next/standalone/apps/web/node_modules ]; then
-            cp -r apps/web/.next/standalone/apps/web/node_modules/. deploy-package/node_modules/
-          fi
+          # node_modules dari level atas standalone
+          cp -r apps/web/.next/standalone/node_modules deploy-package/node_modules
 
-          # static assets & public, ditaruh flat juga
+          # static assets & public
           mkdir -p deploy-package/.next
           cp -r apps/web/.next/static deploy-package/.next/static
           cp -r apps/web/public deploy-package/public
