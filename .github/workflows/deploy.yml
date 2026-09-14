@@ -1,0 +1,79 @@
+name: Deploy BamCargo to Production
+
+# Jalan otomatis tiap ada push ke branch "prod"
+# Ganti "prod" di bawah sesuai nama branch production kamu (misal "main")
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Ambil source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup pnpm & Node.js
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9 # sesuaikan dengan versi pnpm yang kamu pakai lokal
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # sesuaikan dengan versi Node.js di cPanel Setup Node.js App
+          cache: 'pnpm'
+
+      # 3. Install dependencies & build
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build project
+        run: pnpm build
+        env:
+          # Tambahkan env production yang dibutuhkan saat BUILD time di sini
+          # (env yang cuma dibutuhkan saat RUNTIME cukup di-set di cPanel Setup Node.js App)
+          NEXT_PUBLIC_APP_URL: https://bamcargo.co.id
+
+      # 4. Upload hasil build ke server via rsync over SSH
+      - name: Deploy build to server via rsync
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avzr --delete
+          # --delete akan hapus file di tujuan yang gak ada di source
+          # HATI-HATI: pastikan path tujuan BENAR, jangan sampai --delete folder yang salah
+          path: .next/ public/ package.json pnpm-lock.yaml next.config.* .env.production
+          remote_path: /home/bamcar7304/APP_ROOT_KAMU/  # GANTI: path folder app Node.js di cPanel
+          remote_host: bamcargo.co.id
+          remote_port: 45022
+          remote_user: bamcar7304
+          remote_key: ${{ secrets.VPS_SSH_KEY }}
+
+      # 5. Jalankan command tambahan di server: install deps production,
+      #    handle symlink assets, dan restart app via Passenger
+      - name: Post-deploy commands via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: bamcargo.co.id
+          port: 45022
+          username: bamcar7304
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            # cd /home/bamcar7304/bamcargo.co.id/apps/web
+
+            # Install cuma production dependencies (lebih cepat & hemat resource)
+            # Sesuaikan path pnpm kalau cPanel Node.js App kamu punya path sendiri
+            pnpm install --prod --frozen-lockfile
+
+            # Hapus folder public lama & bikin ulang symlink assets
+            # GANTI baris di bawah sesuai command manual yang biasa kamu jalankan
+            rm -rf public
+            ln -s /home/bamcar7304/bamcargo_storage public
+
+            # Trigger restart lewat Passenger (cPanel Node.js App)
+            mkdir -p tmp
+            # touch tmp/restart.txt
