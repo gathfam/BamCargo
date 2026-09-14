@@ -4,6 +4,13 @@ import pool from "@bamcargo/core/lib/db";
 import bcrypt from "bcrypt";
 import type { RowDataPacket } from "mysql2";
 
+const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || "build-time-placeholder";
+
+// Runtime safety check
+if (typeof window === "undefined" && NEXTAUTH_SECRET === "build-time-placeholder") {
+  console.error("⚠️  NEXTAUTH_SECRET not set! Auth will fail in production.");
+}
+
 interface UserRow extends RowDataPacket {
   id: number;
   username: string;
@@ -21,6 +28,10 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (NEXTAUTH_SECRET === "build-time-placeholder") {
+          throw new Error("NEXTAUTH_SECRET not configured. Generate: openssl rand -base64 32");
+        }
+
         if (!credentials?.username || !credentials?.password) {
           console.log("Username dan password wajib diisi");
           throw new Error("Username dan password wajib diisi");
@@ -67,9 +78,7 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || (() => {
-    throw new Error("NEXTAUTH_SECRET is required. Generate: `openssl rand -base64 32`");
-  })(),
+  secret: NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
