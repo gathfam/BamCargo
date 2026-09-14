@@ -4,13 +4,6 @@ import pool from "@bamcargo/core/lib/db";
 import bcrypt from "bcrypt";
 import type { RowDataPacket } from "mysql2";
 
-const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
-if (!NEXTAUTH_SECRET) {
-  throw new Error(
-    "NEXTAUTH_SECRET is required. Generate: `openssl rand -base64 32`",
-  );
-}
-
 interface UserRow extends RowDataPacket {
   id: number;
   username: string;
@@ -74,7 +67,9 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
-  secret: NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || (() => {
+    throw new Error("NEXTAUTH_SECRET is required. Generate: `openssl rand -base64 32`");
+  })(),
 };
 
 const handler = NextAuth(authOptions);
