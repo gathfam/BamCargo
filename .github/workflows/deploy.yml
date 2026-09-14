@@ -67,10 +67,17 @@ jobs:
           # node_modules dari level atas standalone
           cp -r apps/web/.next/standalone/node_modules deploy-package/node_modules
 
-          # static assets & public
+          # static assets
           mkdir -p deploy-package/.next
           cp -r apps/web/.next/static deploy-package/.next/static
-          cp -r apps/web/public deploy-package/public
+
+          # public folder (kalau ada di repo)
+          if [ -d apps/web/public ]; then
+            cp -r apps/web/public deploy-package/public
+          else
+            echo "⚠️  apps/web/public not found in repo, skipping..."
+            mkdir -p deploy-package/public
+          fi
 
       # 5. Upload paket ke server via rsync over SSH
       - name: Deploy build to server via rsync
