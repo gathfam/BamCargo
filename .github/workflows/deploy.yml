@@ -38,12 +38,24 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://bamcargo.co.id
           BAM_BACKEND_URL: https://online.bamcargo.co.id/api/v1
           BAM_API_KEY: ${{ secrets.BAM_API_KEY }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASS: ""
+          DB_NAME: bamcargo_db
 
       # 4. Susun paket standalone dalam bentuk FLAT (server.js langsung di root),
       #    sesuai struktur yang udah dipakai app production kamu di cPanel
       #    (Application startup file = "server.js", bukan "apps/web/server.js").
       #    Next standalone di monorepo nge-nest jadi apps/web/... + node_modules
       #    di level atas -- kita "angkat" isi apps/web ke root, gabung node_modules-nya.
+      - name: Verify standalone output
+        run: |
+          echo "=== Checking standalone structure ==="
+          ls -la apps/web/.next/standalone/ || echo "ERROR: standalone folder missing"
+          ls -la apps/web/.next/standalone/apps/web/ || echo "ERROR: nested apps/web missing"
+
       - name: Assemble standalone deploy package (flattened)
         run: |
           rm -rf deploy-package
