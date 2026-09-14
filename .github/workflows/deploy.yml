@@ -138,8 +138,8 @@ jobs:
             echo "BAM_API_KEY=${{ secrets.BAM_API_KEY }}" >> .env
             echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
             echo "NEXTAUTH_URL=https://bamcargo.co.id" >> .env
-            echo "DB_HOST=127.0.0.1" >> .env
             echo "DB_PORT=3306" >> .env
+            echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
             echo "DB_USER=${{ secrets.DB_USER }}" >> .env
             echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
