@@ -1,8 +1,7 @@
 import type { ApiResponse } from "./api";
-
 export interface ReceiptDetail {
   number: string;
-  reference_no: string;
+  reference_no: string | null;
   service: string;
   pickup_time: string;
   origin: string;
@@ -16,7 +15,7 @@ export interface ReceiptDetail {
   status: string;
   recipient: string;
   is_delivered: boolean;
-  progress: ReceiptProgress[];
+  progress: Record<string, ReceiptProgress>;
 }
 
 export interface ReceiptProgress {
@@ -27,6 +26,18 @@ export interface ReceiptProgress {
   notes: string | null;
   handler: string;
   status_code: string;
+  attachments?: Attachment[];
+}
+
+export interface Attachment {
+  name: string;
+  path: string;
+  description: string | null;
+  created_at: {
+    date: string;
+    timezone_type: number;
+    timezone: string;
+  };
 }
 
 export type ReceiptResponse = ApiResponse<ReceiptDetail>;

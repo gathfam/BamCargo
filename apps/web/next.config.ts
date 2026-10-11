@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "api.bamcargo.co.id",
+      },
+      {
+        protocol: "https",
         hostname: "dev.bamcargo.co.id",
       },
       {

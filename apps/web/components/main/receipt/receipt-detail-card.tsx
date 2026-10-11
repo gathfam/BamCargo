@@ -14,6 +14,7 @@ import {
   Truck,
   Home,
 } from "lucide-react";
+import Image from "next/image";
 import { memo, useMemo } from "react";
 
 const STAGES = [
@@ -54,6 +55,8 @@ export const ReceiptDetailCard = memo(function ReceiptDetailCard({
         ? 1
         : 0;
 
+  const attachments = steps.flatMap((s) => s.attachments ?? []);
+
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6">
       <Card>
@@ -74,7 +77,6 @@ export const ReceiptDetailCard = memo(function ReceiptDetailCard({
         </CardHeader>
 
         <CardContent className="space-y-8">
-
           {/* INFO + ROUTE */}
           <div className="grid grid-cols-2 gap-4 border-t pt-6 sm:grid-cols-4">
             <Info icon={Package} label="Layanan" value={data.service} />
@@ -139,6 +141,20 @@ export const ReceiptDetailCard = memo(function ReceiptDetailCard({
               </li>
             ))}
           </ul>
+          {attachments.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2 border-t pt-4">
+              {attachments.map((a, i) => (
+                <Image
+                  key={i}
+                  src={a.path} // sesuaikan dengan field datamu
+                  alt={`Lampiran ${i + 1}`}
+                  width={80}
+                  height={100}
+                  className="rounded border object-cover"
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
